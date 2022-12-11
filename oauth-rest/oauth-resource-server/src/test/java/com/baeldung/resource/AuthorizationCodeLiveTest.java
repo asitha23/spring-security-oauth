@@ -32,6 +32,16 @@ public class AuthorizationCodeLiveTest {
 
     }
 
+	@Test
+	public void givenUser_whenUseFooClient_thenNotOkForFooResourceOnly() {
+		final String accessToken = obtainAccessTokenWithAuthorizationCode("mike@other.com", "pass");
+
+		final Response fooResponse = RestAssured.given().header("Authorization", "Bearer " + accessToken).get(RESOURCE_SERVER + "/api/foos/1");
+		assertEquals(200, fooResponse.getStatusCode());
+		assertNotNull(fooResponse.jsonPath().get("name"));
+
+	}
+
     private String obtainAccessTokenWithAuthorizationCode(String username, String password) {
     	
 
